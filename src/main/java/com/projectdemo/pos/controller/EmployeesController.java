@@ -30,38 +30,58 @@ public class EmployeesController {
 	
 	private static Logger logger = LoggerFactory.getLogger(EmployeesController.class);
 	
+	public EmployeesController(Employees emp) { }
 	
-	public EmployeesController(Employees emp) {
-		
-	}
-	
-	public EmployeesController() {
-		
-	}
+	public EmployeesController() { }
 	
 	@GetMapping("/employees")
 	public List<Employees> getEmployeesList(){
-
-		return empRepository.findAll();
 		
+		try {
+			return empRepository.findAll();
+			
+		}catch(Exception e) {
+			logger.warn(e.getLocalizedMessage());
+		}
+		return null;
+	
 	}
 	
 	@GetMapping("/employees/{id}")
-	public Optional<Employees> getSingleEmployee(@PathVariable int id) {
-		return empRepository.findById(id);
+	public Employees getSingleEmployee(@PathVariable int id) {		
+		
+		try {
+			Optional<Employees> employeeGetter = empRepository.findById(id);
+			Employees singleEmployee = employeeGetter.get();
+			return singleEmployee;
+		}catch(NoSuchElementException e) {
+			logger.error(e.getMessage());
+		}
+		return null;
 	}
 	
 	@PostMapping("/employees/add")
 	public void addSingleEmployee(@RequestBody Employees emp) {
-		empRepository.save(emp);
-		logger.info("New employee added!");
+		
+		try {
+			empRepository.save(emp);
+			logger.info("HTTP POST: New employee added!");
+		}catch(NoSuchElementException e) {
+			logger.warn(e.getLocalizedMessage());
+		}
+		
 	}
 	
 	@DeleteMapping("/employees/remove/{id}")
 	public void deleteSingleEmployee(@PathVariable int id) {
 		
-		empRepository.deleteById(id);
-		logger.info("Employee ID " + id + " has been successfully deleted.");
+		try {
+			empRepository.deleteById(id);
+			logger.info("HTTP DELETE: Employee ID " + id + " has been successfully deleted.");
+		}catch(NoSuchElementException e) {
+			logger.error(e.getLocalizedMessage());
+		}
+		
 	}
 	
 	@PutMapping("/employees/edit/{id}")
@@ -76,19 +96,14 @@ public class EmployeesController {
 			employee2 = empService.EmployeeUpdate(employee, emp);
 			
 			empRepository.save(employee2);
-			logger.info("Updated employee successfully");
+			logger.info("HTTP UPDATE: Updated employee successfully");
 			
 		}catch(NullPointerException e) {
-			logger.warn("Employee with ID " + id + " was not found.");
+			logger.warn("HTTP UPDATE: Employee with ID " + id + " was not found.");
 			
 		}catch(NoSuchElementException e) {
+			logger.warn("HTTP UPDATE: No Employee Found!");
 			
-			logger.warn("No Employee Found!");	
 		}
-	}
-	
-	
-	
-	
-	
+	}	
 }
