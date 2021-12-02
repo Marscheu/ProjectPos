@@ -1,17 +1,10 @@
 package com.projectdemo.pos.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Orders {
@@ -22,23 +15,53 @@ public class Orders {
 	private int id;
 	
 	@Column(name="order_id")
-	private String order_id;
+	private int order_id;
 	
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="order_item")
-	private List<Items> order_item = new ArrayList<>();
+	@Column(name="order_total")
+	private double order_total;
 	
-	@Column(name="order_price")
-	private double order_price;
+	@Column(name="order_cashier")
+	private int order_cashier;
 	
-	@Column(name="order_quantity")
-	private int order_quantity;
-	
-	@Column(name="order_amount")
-	private double order_amount;
-	
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="order_cashier")
-	private Employees order_cashier;
+	public Orders() {
+		
+	}
+
+	public Orders(int order_id, double order_total, int order_cashier) {
+		super();
+		this.order_id = order_id;
+		this.order_total = order_total;
+		this.order_cashier = order_cashier;
+	}
+
+	public int getOrder_id() {
+		return order_id;
+	}
+
+	public void setOrder_id(int order_id) {
+		this.order_id = order_id;
+	}
+
+	public double getOrder_total() {
+		return order_total;
+	}
+
+	public void setOrder_total(double order_total) {
+		this.order_total = order_total;
+	}
+
+	public int getOrder_cashier() {
+		return order_cashier;
+	}
+
+	public void setOrder_cashier(int order_cashier) {
+		this.order_cashier = order_cashier;
+	}
+
+	@Override
+	public String toString() {
+		return "Orders [order_id=" + order_id + ", order_total=" + order_total + ", order_cashier=" + order_cashier
+				+ "]";
+	}
 
 }

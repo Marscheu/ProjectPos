@@ -26,6 +26,10 @@ public class Items {
 	@Column(name="item_tag")
 	private String item_tag;
 	
+	public Items() {
+		
+	}
+	
 	public Items(String item_id, String item_description, double item_price, String item_tag) {
 		this.item_id = item_id;
 		this.item_description = item_description;
